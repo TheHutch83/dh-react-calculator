@@ -1,4 +1,5 @@
 .result-screen {
   background-color: rgba(183, 125, 1, 0.756);
   color: black;
+  justify-content: flex-end;
 }
