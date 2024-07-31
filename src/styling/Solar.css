@@ -1,0 +1,7 @@
+.solar-panel {
+  height: 50px;
+  width: 200px;
+  background-color: #ad6d6e;
+  align-self: flex-start;
+  margin-left: 30px;
+}

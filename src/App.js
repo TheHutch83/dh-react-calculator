@@ -4,6 +4,7 @@ import "./styling/App.css";
 import "./styling/Button.css";
 import Input from "./components/Input";
 import Info from "./components/Info";
+import Solar from "./components/Solar";
 
 const App = () => {
   return (
