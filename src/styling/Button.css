@@ -1,15 +1,46 @@
 .normal-buttons {
-  height: 4em;
-  width: 4em;
+  height: 3em;
+  width: 3em;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba(255, 255, 255, 0.898);
-  color: black;
+  background-color: #ffffffe5;
+  color: #000000;
   margin: 10px;
   font-weight: bold;
-  /* font-size: large; */
+  align-content: end;
+  border-radius: 3px;
+  font-family: "DS-Digital";
+  font-style: italic;
+  /* box-shadow: 0 1px 2px rgba(146, 145, 145, 0.676),
+    0 1px 2px rgba(151, 149, 149, 0.633); */
+  /* position: relative;
+  margin: 5px; */
 }
+
+/* .normal-buttons::before {
+  content: "";
+  display: inline-block;
+  background: #f15757;
+  width: 4em;
+  height: 1em;
+  transform: skewX(-40deg);
+  position: absolute;
+  top: -15px;
+  left: 5px;
+}
+
+.normal-buttons::after {
+  content: "";
+  display: inline-block;
+  background: #9e1515;
+  width: 1em;
+  height: 4em;
+  transform: skewY(-50deg);
+  position: absolute;
+  top: -12px;
+  left: 100%;
+} */
 
 .memory-button {
   background-color: #5ba5c9;
@@ -21,6 +52,5 @@
 
 .large-button {
   grid-row: span 2;
-  height: calc(8em + 10px);
-  height: 10em;
+  height: 7.5em;
 }

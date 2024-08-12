@@ -1,8 +1,45 @@
 .text {
   display: flex;
-  color: white;
+  flex-direction: row;
+  align-items: flex-end;
+  color: #ffffff;
+  background-color: #343232;
+  position: relative;
+  padding: 0px 0px 10px 0px;
+}
+
+.text::before,
+.text::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  height: 2px;
+  background-color: #800000;
+}
+
+.text::before {
+  left: -15%;
+  right: 50%;
+}
+
+.text::after {
+  left: 50%;
+  right: -15%;
 }
 
 .casio {
-  color: "biege";
+  font-size: 20px;
+  font-weight: bold;
+  font-family: "Gill Sans", "Gill Sans MT", "Trebuchet MS", sans-serif;
+  margin-right: 10px;
+  margin-left: -20px;
+}
+
+.model {
+  font-size: 15px;
+  margin-right: 5px;
+}
+
+.description {
+  font-size: 10px;
 }
