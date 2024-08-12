@@ -1,9 +1,9 @@
 import "../styling/Input.css";
 
-const Input = () => {
+const Input = ({ value }) => {
   return (
     <div className="result-container">
-      <div className="result-screen">888</div>
+      <div className="result-screen">{value}</div>
     </div>
   );
 };

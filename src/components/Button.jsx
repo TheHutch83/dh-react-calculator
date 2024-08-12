@@ -1,6 +1,6 @@
 import "../styling/Button.css";
 
-const Button = ({ symbol, className }) => {
+const Button = ({ symbol, className, onClick }) => {
   const memoryButtonClass = ["MR", "M+", "M-"].includes(symbol)
     ? "memory-button"
     : "";
@@ -10,6 +10,7 @@ const Button = ({ symbol, className }) => {
   return (
     <div
       className={`normal-buttons ${memoryButtonClass} ${cancelButtonClass} ${className}`}
+      onClick={() => onClick(symbol)}
     >
       {symbol}
     </div>
