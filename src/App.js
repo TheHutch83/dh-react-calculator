@@ -5,6 +5,10 @@ import Input from "./components/Input";
 import Info from "./components/Info";
 import Solar from "./components/Solar";
 import Joi from "joi";
+import NumberButton from "./components/NumberButton";
+import OperatorButton from "./components/OperatorButton";
+import EqualsButton from "./components/EqualsButton";
+import Display from "./components/Display";
 
 const App = () => {
   const [input, setInput] = useState("");
