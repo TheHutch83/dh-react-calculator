@@ -5,32 +5,115 @@ import Input from "./components/Input";
 import Info from "./components/Info";
 import Solar from "./components/Solar";
 import Joi from "joi";
-import NumberButton from "./components/NumberButton";
-import OperatorButton from "./components/OperatorButton";
-import EqualsButton from "./components/EqualsButton";
-import Display from "./components/Display";
 
 const App = () => {
-  const [input, setInput] = useState("");
+  const [currentInput, setCurrentInput] = useState("");
+  const [previousValue, setPreviousValue] = useState(null);
+  const [operator, setOperator] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
+  const [lastAction, setLastAction] = useState(null);
+  const [display, setDisplay] = useState("");
 
   const inputSchema = Joi.string().max(12).required();
 
   const onInputClick = (symbol) => {
-    console.log(`Button clicked: ${symbol}`); // test to make sure the button press is recognised
-    const newInput = input + symbol;
-    const { error } = inputSchema.validate(newInput);
-    if (error) {
-      setErrorMessage("Input is too long!");
-    } else setInput(newInput);
-    setErrorMessage("");
+    if (!isNaN(symbol) || symbol === ".") {
+      if (lastAction === "=") {
+        setCurrentInput(symbol);
+        setDisplay(symbol);
+        setLastAction(null);
+      } else {
+        const newInput = currentInput + symbol;
+        const { error } = inputSchema.validate(newInput);
+        if (error) {
+          setErrorMessage("Input is too long!");
+        } else {
+          setCurrentInput(newInput);
+          setDisplay(newInput);
+          setErrorMessage("");
+        }
+      }
+    } else if (symbol === "√") {
+      if (currentInput !== "") {
+        const inputValue = parseFloat(currentInput);
+        if (inputValue < 0) {
+          setErrorMessage("Invalid input for square root");
+          setDisplay("Error");
+        } else {
+          const sqrtValue = Math.sqrt(inputValue).toFixed(10);
+          setCurrentInput(sqrtValue);
+          setDisplay(sqrtValue);
+          setLastAction("√");
+          setErrorMessage("");
+        }
+      }
+    } else if (symbol === "%") {
+      if (previousValue && operator) {
+        const percentageValue =
+          parseFloat(previousValue) * (parseFloat(currentInput) / 100);
+        const formattedValue = percentageValue.toFixed(10);
+        setCurrentInput(formattedValue);
+        setDisplay(formattedValue);
+        setLastAction("%");
+      }
+    } else if (["+", "-", "x", "÷"].includes(symbol)) {
+      setPreviousValue(currentInput);
+      setOperator(symbol);
+      setCurrentInput("");
+      setDisplay("");
+      setLastAction(symbol);
+    } else if (symbol === "=") {
+      if (operator && previousValue != null) {
+        const result = calculateResult(
+          parseFloat(previousValue),
+          parseFloat(currentInput),
+          operator
+        );
+        setCurrentInput(result);
+        setDisplay(result);
+        setPreviousValue(null);
+        setOperator(null);
+        setLastAction("=");
+      }
+    } else if (symbol === "C") {
+      setCurrentInput("");
+      setDisplay("");
+      setLastAction(null);
+      setErrorMessage("");
+    } else if (symbol === "AC") {
+      setCurrentInput("");
+      setDisplay("");
+      setPreviousValue(null);
+      setOperator(null);
+      setLastAction(null);
+      setErrorMessage("");
+    }
+  };
+
+  const calculateResult = (prev, current, oper) => {
+    switch (oper) {
+      case "+":
+        return (prev + current).toFixed(10);
+      case "-":
+        return (prev - current).toFixed(10);
+      case "x":
+        return (prev * current).toFixed(10);
+      case "÷":
+        if (current === 0) {
+          setErrorMessage("Cannot divide by zero");
+          return prev;
+        }
+        return (prev / current).toFixed(10);
+      default:
+        return current;
+    }
   };
 
   return (
     <div className="app-container">
       <div className="calculator-container">
         <div className="input">
-          <Input value={input} />
+          <Input value={currentInput} />
           {errorMessage && <div className="error">{errorMessage}</div>}
         </div>
         <div className="info-panel">

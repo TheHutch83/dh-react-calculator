@@ -1,5 +1,5 @@
-const EqualsButton = () => {
-  return <></>;
-};
+const EqualsButton = ({ onEqualsClick }) => (
+  <button onClick={onEqualsClick}>=</button>
+);
 
 export default EqualsButton;
