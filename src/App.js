@@ -12,15 +12,14 @@ const App = () => {
   const [operator, setOperator] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [lastAction, setLastAction] = useState(null);
-  const [display, setDisplay] = useState("");
 
   const inputSchema = Joi.string().max(12).required();
 
   const onInputClick = (symbol) => {
     if (!isNaN(symbol) || symbol === ".") {
-      if (lastAction === "=") {
+      if (lastAction === "=" || lastAction === "M+" || lastAction === "M-") {
         setCurrentInput(symbol);
-        setDisplay(symbol);
+
         setLastAction(null);
       } else {
         const newInput = currentInput + symbol;
@@ -29,7 +28,7 @@ const App = () => {
           setErrorMessage("Input is too long!");
         } else {
           setCurrentInput(newInput);
-          setDisplay(newInput);
+
           setErrorMessage("");
         }
       }
@@ -38,11 +37,10 @@ const App = () => {
         const inputValue = parseFloat(currentInput);
         if (inputValue < 0) {
           setErrorMessage("Invalid input for square root");
-          setDisplay("Error");
         } else {
           const sqrtValue = Math.sqrt(inputValue).toFixed(10);
           setCurrentInput(sqrtValue);
-          setDisplay(sqrtValue);
+
           setLastAction("√");
           setErrorMessage("");
         }
@@ -53,14 +51,25 @@ const App = () => {
           parseFloat(previousValue) * (parseFloat(currentInput) / 100);
         const formattedValue = percentageValue.toFixed(10);
         setCurrentInput(formattedValue);
-        setDisplay(formattedValue);
+
         setLastAction("%");
       }
+    } else if (symbol === "MR") {
+      const memoryRecall = getFromMemory();
+      setCurrentInput(memoryRecall);
+
+      setLastAction("MR");
+    } else if (symbol === "M+" || symbol === "M-") {
+      const currentValue = parseFloat(currentInput);
+      symbol === "M+"
+        ? addToMemory(currentValue)
+        : subtractFromMemory(currentValue);
+      setLastAction(symbol);
     } else if (["+", "-", "x", "÷"].includes(symbol)) {
       setPreviousValue(currentInput);
       setOperator(symbol);
       setCurrentInput("");
-      setDisplay("");
+
       setLastAction(symbol);
     } else if (symbol === "=") {
       if (operator && previousValue != null) {
@@ -70,19 +79,19 @@ const App = () => {
           operator
         );
         setCurrentInput(result);
-        setDisplay(result);
+
         setPreviousValue(null);
         setOperator(null);
         setLastAction("=");
       }
     } else if (symbol === "C") {
       setCurrentInput("");
-      setDisplay("");
+
       setLastAction(null);
       setErrorMessage("");
     } else if (symbol === "AC") {
       setCurrentInput("");
-      setDisplay("");
+
       setPreviousValue(null);
       setOperator(null);
       setLastAction(null);
@@ -107,6 +116,27 @@ const App = () => {
       default:
         return current;
     }
+  };
+
+  const saveToMemory = (value) => {
+    localStorage.setItem("memory", value);
+  };
+
+  const getFromMemory = () => {
+    const memoryValue = localStorage.getItem("memory");
+    return memoryValue || "0";
+  };
+
+  const addToMemory = (currentValue) => {
+    const memoryValue = parseFloat(getFromMemory());
+    const newValue = memoryValue + parseFloat(currentValue);
+    saveToMemory(newValue.toString());
+  };
+
+  const subtractFromMemory = (currentValue) => {
+    const memoryValue = parseFloat(getFromMemory());
+    const newValue = memoryValue - parseFloat(currentValue);
+    saveToMemory(newValue.toString());
   };
 
   return (
