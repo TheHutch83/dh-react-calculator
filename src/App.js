@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Button from "./components/Button";
 import "./styling/App.css";
 import Input from "./components/Input";
@@ -15,6 +15,11 @@ const App = () => {
 
   const inputSchema = Joi.string().max(12).required();
 
+  useEffect(() => {
+    localStorage.clear();
+    console.log("Local storage cleared on page refresh.");
+  }, []);
+
   const onInputClick = (symbol) => {
     if (!isNaN(symbol) || symbol === ".") {
       if (lastAction === "=" || lastAction === "M+" || lastAction === "M-") {
@@ -28,7 +33,6 @@ const App = () => {
           setErrorMessage("Input is too long!");
         } else {
           setCurrentInput(newInput);
-
           setErrorMessage("");
         }
       }
@@ -40,7 +44,6 @@ const App = () => {
         } else {
           const sqrtValue = Math.sqrt(inputValue).toFixed(10);
           setCurrentInput(sqrtValue);
-
           setLastAction("√");
           setErrorMessage("");
         }
@@ -51,13 +54,11 @@ const App = () => {
           parseFloat(previousValue) * (parseFloat(currentInput) / 100);
         const formattedValue = percentageValue.toFixed(10);
         setCurrentInput(formattedValue);
-
         setLastAction("%");
       }
     } else if (symbol === "MR") {
       const memoryRecall = getFromMemory();
       setCurrentInput(memoryRecall);
-
       setLastAction("MR");
     } else if (symbol === "M+" || symbol === "M-") {
       const currentValue = parseFloat(currentInput);
@@ -69,7 +70,6 @@ const App = () => {
       setPreviousValue(currentInput);
       setOperator(symbol);
       setCurrentInput("");
-
       setLastAction(symbol);
     } else if (symbol === "=") {
       if (operator && previousValue != null) {
@@ -79,19 +79,16 @@ const App = () => {
           operator
         );
         setCurrentInput(result);
-
         setPreviousValue(null);
         setOperator(null);
         setLastAction("=");
       }
     } else if (symbol === "C") {
       setCurrentInput("");
-
       setLastAction(null);
       setErrorMessage("");
     } else if (symbol === "AC") {
       setCurrentInput("");
-
       setPreviousValue(null);
       setOperator(null);
       setLastAction(null);
@@ -186,3 +183,10 @@ const App = () => {
 };
 
 export default App;
+
+//the memory buttons on the calculator being emulated, does not have a MC function.
+// and not can I find a spare button on the interface to use.
+// I could make the plus a normal sized button which would free up a spare buttong.
+// local storage is therefore being used and stored forever.
+//therefore to keep the app looking like the inspiration, I will clear the local storage
+// when the app is closed down. I think this is the best approach.
